@@ -10,7 +10,12 @@ public class GameUIController : MonoBehaviour
 
     [HideInInspector] public static bool isPaused = false;
 
-    private void Update()
+	private void Start()
+	{
+        MapToggle.onMapToggle.AddListener(ToggleFullscreenMap);
+	}
+
+	private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -18,15 +23,6 @@ public class GameUIController : MonoBehaviour
                 ResumeGame();
             else
                 PauseGame();
-        }
-
-        if (Input.GetKeyDown(KeyCode.M) && !isPaused)
-        {
-            ShowFullMap();
-        }
-        else if (Input.GetKeyUp(KeyCode.M))
-        {
-            HideFullMap();
         }
     }
 
@@ -55,20 +51,22 @@ public class GameUIController : MonoBehaviour
     {
         Application.Quit();
     }
-
+    
     #region Map Controls
-    private void ShowFullMap()
-    {
-        minimap.SetActive(false);
-        fullscreenMap.SetActive(true);
+    public void ToggleFullscreenMap()
+	{
+        if (minimap.activeSelf && ! isPaused)
+		{
+            minimap.SetActive(false);
+            fullscreenMap.SetActive(true);
 
-        menuAudio.PlayMapSound();
-    }
-
-    private void HideFullMap()
-    {
-        fullscreenMap.SetActive(false);
-        minimap.SetActive(true);
-    }
+            menuAudio.PlayMapSound();
+        }
+        else
+		{
+            fullscreenMap.SetActive(false);
+            minimap.SetActive(true);
+        }
+	}
     #endregion
 }
